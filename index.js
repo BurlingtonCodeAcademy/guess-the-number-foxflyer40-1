@@ -25,8 +25,11 @@ let numOfGuesses = null
 start();
 
 async function start() {
-  console.log("Let's play a game where you (human) make up a number between " + loNum + " and " + hiNum + "\nand I (computer) try to guess it.\n")
-  let secretNumber = await ask("What is your secret number?\n")
+  console.log("\nLet's play a game where you (human) pick up a number and I (computer) try to guess it.\n")
+  
+  let hiNum = await ask("(You can even set the range between 1 and...?\nEnter a number greater than 1 >")
+
+  let secretNumber = await ask("\nNow, pick your secret number?\n>(I will not look... really...)\n>")
   console.log('You entered: ' + secretNumber)
 
   // start loop
