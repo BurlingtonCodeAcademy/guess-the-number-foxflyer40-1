@@ -2,40 +2,59 @@
 const readline = require('readline')
 const rl = readline.createInterface(process.stdin, process.stdout)
 
-
-// GLOBALFUNCTIONS
 function ask(questionText) {
   return new Promise((resolve, reject) => {
     rl.question(questionText, resolve)
   })
 }
 
-function guesseAgain(max, min) {
-  return Math.floor(((max - min + 1) / 2) + min)
-}
-
 // GLOBAL VARIABLES
-let hiNum = 100
+let hiNum = null
 let loNum = 0
-let lastGuesse = null
+let secretNumber = null
+let lastGuess = null
 let guessConfirm = "N"
 let hiLo = ""
 let numOfGuesses = null
 
+// GLOBALFUNCTIONS
+function guesseAgain(max, min) {
+  return Math.floor(((max - min + 1) / 2) + min)
+}
+
+function showVariables() {
+  console.log('\n')
+  console.log("hiNum = " + hiNum)
+  console.log("loNum = " + loNum)
+  console.log("secretNumber = " + secretNumber)
+  console.log('lastGuess = ' + lastGuess)
+  console.log("guessConfirm = " + guessConfirm)
+  console.log("hiLo = " + hiLo)
+  console.log("NumOfGuesses " + numOfGuesses)
+  console.log('\n')
+}
+
+// Start program
 start();
 
 async function start() {
-  console.log("\nLet's play a game where you (human) pick up a number and I (computer) try to guess it.\n")
   
-  let hiNum = await ask("(You can even set the range between 1 and...?\nEnter a number greater than 1 >")
+  showVariables() //progress check
 
-  let secretNumber = await ask("\nNow, pick your secret number?\n>(I will not look... really...)\n>")
-  console.log('You entered: ' + secretNumber)
+  console.log("\nLet's play a game where you (human) pick up a number and I (computer) try to guess it.\n")
+
+  hiNum = await ask("(You can even set the range between 1 and...?\nEnter a number greater than 1 >")
+
+  secretNumber = await ask("\nNow, pick your secret number.\n>(I will not look... really...)\n>")
+  console.log('You entered: ' + secretNumber + "\n(Which I TOTALLY did not see.)")
 
   // start loop
   while (guessConfirm !== 'Y') {
+    
+    showVariables() //progress check
+
     guessConfirm = await ask("is your number " + guesseAgain(hiNum, loNum) + "?\nEnter Y or N\n>")
-    lastGuesse = guesseAgain(hiNum, loNum)
+    lastGuess = guesseAgain(hiNum, loNum)
     numOfGuesses += 1
 
     if (guessConfirm === 'Y') {
@@ -51,15 +70,8 @@ async function start() {
       console.log('Please enter Capital Y or Capital N only...\n')
     }
   }
-  console.log('\n')
-  console.log("secretNumber = " + secretNumber)
-  console.log("hiNum = " + hiNum)
-  console.log("loNum = " + loNum)
-  console.log("guesseAgain = " + guesseAgain(hiNum, loNum))
-  console.log('lastGuesse = ' + lastGuesse)
-  console.log("guessConfirm = " + guessConfirm)
-  console.log("hiLo = " + hiLo)
-  console.log('\n')
+
+  showVariables() //progress check
 
   process.exit()
 }
