@@ -12,7 +12,7 @@ function ask(questionText) {
 let hiNum = null
 let loNum = 0
 let secretNumber = null
-let lastGuess = null
+let lastGuess = []
 let guessConfirm = "N"
 let hiLo = ""
 let numOfGuesses = null
@@ -38,8 +38,6 @@ function showVariables() {
 start();
 
 async function start() {
-  
-  showVariables() //progress check
 
   console.log("\nLet's play a game where you (human) pick up a number and I (computer) try to guess it.\n")
 
@@ -50,25 +48,28 @@ async function start() {
 
   // start loop
   while (guessConfirm !== 'Y') {
-    
+
     showVariables() //progress check
 
     guessConfirm = await ask("is your number " + guesseAgain(hiNum, loNum) + "?\nEnter Y or N\n>")
-    lastGuess = guesseAgain(hiNum, loNum)
-    numOfGuesses += 1
+
 
     if (guessConfirm === 'Y') {
       console.log('\nWOOHOO!\nI guessed it in ' + numOfGuesses + ' tries!')
-    } else if (guessConfirm === 'N') {
-      hiLo = await ask('Was my guess too high (H) or too low (L)?\n\nEnter H or L\n>')
-      if (hiLo === 'H') {
-        hiNum = guesseAgain(hiNum, loNum)
-      } else if (hiLo === 'L') {
-        loNum = guesseAgain(hiNum, loNum)
-      } else { 'Please enter Capital H or Capital L only...\n' }
-    } else {
-      console.log('Please enter Capital Y or Capital N only...\n')
-    }
+    } else
+
+      if (guessConfirm === 'N') {
+        lastGuess.push(guesseAgain(hiNum, loNum))
+        numOfGuesses += 1
+                    hiLo = await ask('Was my guess too high (H) or too low (L)?\n\nEnter H or L\n>')
+                    if (hiLo === 'H') {
+                      hiNum = guesseAgain(hiNum, loNum)
+                    } else if (hiLo === 'L') {
+                      loNum = guesseAgain(hiNum, loNum)
+                    } else { 'Please enter Capital H or Capital L only...\n' }
+      } else {
+        console.log('Please enter Capital Y or Capital N only...\n')
+      }
   }
 
   showVariables() //progress check
