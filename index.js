@@ -12,14 +12,14 @@ function ask(questionText) {
 
 // GLOBAL VARIABLES
 let hiNum = 0
-let loNum = 1
+let loNum = 0
 let secretNumber = 0
 let currentGuess = 0
 let guessLowerThan = 0
 let guessHigherThan = 0
 let guessConfirm = "N"
 let hiLo = ""
-let numOfGuesses = 1
+let numOfGuesses = 0
 
 // GLOBALFUNCTIONS
 function showVariables() {
@@ -37,24 +37,21 @@ function showVariables() {
 }
 
 function newGuess(max, min) {
-  return Math.floor((max - min + 1) / 2 + min)
+  return Math.floor(((max - min + 1) / 2) + min)
 }
 
 function cheatChecker(cheatCode) {
   if (cheatCode === 1) {
-
     if (secretNumber < loNum || secretNumber > hiNum || secretNumber === NaN) {
-      console.log("\nYou are trying to cheat.\nTry again but this time pick a number in range.")
+      console.log("\nYou are trying to cheat.\nNext time pick a number in range.")
       process.exit()
     }
   } else if (cheatCode === 2) {
-
     if (guessLowerThan - 1 === currentGuess) {
       console.log("\nStupid Human\nYou already said it was lower than " + guessLowerThan + ".\nSo it cannot also be higher than " + currentGuess + ".")
       process.exit()
     }
   } else if (cheatCode === 3) {
-
     if (guessHigherThan + 1 === currentGuess) {
       console.log("\nStupid Human\nYou already said it was higher than " + guessHigherThan + ".\nSo it cannot also be lower than " + currentGuess + ".")
       process.exit()
@@ -88,11 +85,12 @@ async function start() {
 // Run Human Guesses game
 async function humanGuesses() {
   console.log("\nNow I (Mighty computer) will pick a number between 1 and 100\nand You (Puny human) try to guess it.\n")
+  hiNum = 100
   secretNumber = randomInteger(loNum, hiNum)
-  numOfGuesses -= 1
+  numOfGuesses = 0
+
   // start loop
   while (currentGuess !== secretNumber) {
-
     currentGuess = Number(await ask("What is your guess ?\n>"))
     numOfGuesses += 1
     if (currentGuess > secretNumber) {
@@ -100,7 +98,6 @@ async function humanGuesses() {
     } else if (currentGuess < secretNumber) {
       console.log("Guess higher")
     }
-
   }
 
   console.log(secretNumber + " is my secret number.\n")
@@ -116,6 +113,7 @@ async function humanGuesses() {
 
 // Run computer guesses game
 async function computerGuesses() {
+  numOfGuesses = 1
   console.log("\nNow You (Puny human) will pick a number and\nI (Mighty computer) will certainly guess it.\n")
   // Allow Human to set range
   hiNum = Number(await ask("\nI will even allow you to set the range.\nLet's say bettween 1 and...?\nEnter a number greater than 1 \n>"))
@@ -127,6 +125,9 @@ async function computerGuesses() {
   // start loop
   while (guessConfirm !== 'Y') {
     currentGuess = newGuess(hiNum, loNum)
+
+    showVariables()
+
     guessConfirm = await ask("is your number " + currentGuess + "?\nEnter Y or N\n>")
 
     if (guessConfirm === 'Y') {
