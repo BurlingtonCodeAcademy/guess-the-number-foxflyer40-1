@@ -1,3 +1,4 @@
+// send output to the console
 const { Console } = require('console')
 // import Readline
 const readline = require('readline')
@@ -10,11 +11,12 @@ function ask(questionText) {
 }
 
 // GLOBAL VARIABLES
-let hiNum = null
+let hiNum = 0
 let loNum = 1
-let secretNumber = null
-let currentGuess = null
-let lastGuess = []
+let secretNumber = 0
+let currentGuess = 0
+let guessLowerThan = 0
+let guessHigherThan = 0
 let guessConfirm = "N"
 let hiLo = ""
 let numOfGuesses = 1
@@ -25,31 +27,38 @@ function newGuess(max, min) {
 }
 
 function cheatChecker(cheatCode) {
-  showVariables()
   if (cheatCode === 1) {
-    if (secretNumber < loNum || secretNumber > hiNum || secretNumber.isNaN) {
+
+    if (secretNumber < loNum || secretNumber > hiNum || secretNumber === NaN) {
       console.log("\nYou are trying to cheat.\nTry again but this time pick a number in range.")
       process.exit()
     }
- /* } else if (cheatCode === 2) {
-    if (secretNumber !== currentGuess) {
-      console.log("secretNumber = " + secretNumber)
-      console.log("currentGuess = " + currentGuess)
-      console.log('Methinks you LIE human.\nBe GONE and try again later')
+  } else if (cheatCode === 2) {
+
+    if (guessLowerThan - 1 === currentGuess) {
+      console.log("\nStupid Human\nYou already said it was lower than " + guessLowerThan + ".\nSo it cannot also be higher than " + currentGuess + ".")
       process.exit()
-    }*/
+    }
+  } else if (cheatCode === 3) {
+
+    if (guessHigherThan + 1 === currentGuess) {
+      console.log("\nStupid Human\nYou already said it was higher than " + guessHigherThan + ".\nSo it cannot also be lower than " + currentGuess + ".")
+      process.exit()
+    }
   }
 }
+
 function showVariables() {
   console.log('\n')
-  console.log("hiNum = " + hiNum)
-  console.log("loNum = " + loNum)
-  console.log("secretNumber = " + secretNumber)
-  console.log("currentGuess = " + currentGuess)
-  console.log('lastGuess = ' + lastGuess)
-  console.log("guessConfirm = " + guessConfirm)
-  console.log("hiLo = " + hiLo)
-  console.log("NumOfGuesses " + numOfGuesses)
+  console.log("hiNum = " + hiNum + " " + typeof hiNum)
+  console.log("loNum = " + loNum + " " + typeof loNum)
+  console.log("secretNumber = " + secretNumber + " " + typeof secretNumber)
+  console.log("currentGuess = " + currentGuess + " " + typeof currentGuess)
+  console.log('guessHigherThan = ' + guessHigherThan + " " + typeof guessHigherThan)
+  console.log('guessLowerThan = ' + guessLowerThan + " " + typeof guessLowerThan)
+  console.log("guessConfirm = " + guessConfirm + " " + typeof guessConfirm)
+  console.log("hiLo = " + hiLo + " " + typeof hiLo)
+  console.log("NumOfGuesses " + numOfGuesses + " " + typeof numOfGuesses)
   console.log('\n')
 }
 
@@ -57,40 +66,32 @@ function showVariables() {
 start();
 
 async function start() {
-
-  console.log("\nLet's play a game where you (human) pick up a number and I (computer) try to guess it.\n")
-
+  console.log("\nLet's play a game where you (Puny human) pick a number\nand I (Mighty computer) try to guess it.\n")
   // Allow Human to set range
-  hiNum = await ask("(You can even set the range between 1 and...?\nEnter a number greater than 1 >")
-
+  hiNum = Number(await ask("You can even set the range between 1 and...?\nEnter a number greater than 1 \n>"))
   // Human picks secret number
-  secretNumber = await ask("\nNow, pick your secret number.\n>(I will not look... really...)\n>")
-
+  secretNumber = Number(await ask("\nNow, pick your secret number.\n>(I will not look... really...)\n>"))
   cheatChecker(1)  // check Human input for cheating
-  console.log('You entered: ' + secretNumber + "\n(Which I TOTALLY did not see.)")  // store secret number
-
+  console.log('You entered: ' + secretNumber + "\n(Which I TOTALLY did not see.)\n")
 
   // start loop
   while (guessConfirm !== 'Y') {
-
-  
     currentGuess = newGuess(hiNum, loNum)
     guessConfirm = await ask("is your number " + currentGuess + "?\nEnter Y or N\n>")
-    showVariables() //progress check
 
     if (guessConfirm === 'Y') {
-      //cheatChecker(2)
       console.log('\nWOOHOO!\nI guessed it in ' + numOfGuesses + ' tries!')
     } else if (guessConfirm === 'N') {
-      lastGuess.push(currentGuess)
       numOfGuesses += 1
-      hiLo = await ask('Was my guess too high (H) or too low (L)?\n\nEnter H or L\n>')
+      hiLo = await ask('Is your number Higher or Lower than my guess?\nEnter H or L\n>')
       if (hiLo === 'H') {
-        cheatChecker(3)
-        hiNum = currentGuess
-      } else if (hiLo === 'L') {
-        cheatChecker(4)
+        cheatChecker(2)
+        guessHigherThan = currentGuess
         loNum = currentGuess
+      } else if (hiLo === 'L') {
+        cheatChecker(3)
+        guessLowerThan = currentGuess
+        hiNum = currentGuess
       } else { 'Please enter Capital H or Capital L only...\n' }
     } else {
       console.log('Please enter Capital Y or Capital N only...\n')
@@ -98,6 +99,5 @@ async function start() {
   }
 
   showVariables() //progress check
-
   process.exit()
 }
