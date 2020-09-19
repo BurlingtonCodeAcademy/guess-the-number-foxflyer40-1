@@ -21,7 +21,7 @@ let numOfGuesses = 1
 
 // GLOBALFUNCTIONS
 function newGuess(max, min) {
-  return Math.floor(((max - min + 1) / 2) + min)
+  return Math.floor((max - min + 1) / 2 + min)
 }
 
 function cheatChecker(cheatCode) {
@@ -86,8 +86,10 @@ async function start() {
       numOfGuesses += 1
       hiLo = await ask('Was my guess too high (H) or too low (L)?\n\nEnter H or L\n>')
       if (hiLo === 'H') {
+        cheatChecker(3)
         hiNum = currentGuess
       } else if (hiLo === 'L') {
+        cheatChecker(4)
         loNum = currentGuess
       } else { 'Please enter Capital H or Capital L only...\n' }
     } else {
