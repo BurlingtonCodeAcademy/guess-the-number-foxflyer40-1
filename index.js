@@ -23,7 +23,6 @@ let numOfGuesses = 0
 
 // GLOBALFUNCTIONS
 
-
 function showVariables() {
   console.log('\n')
   console.log("hiNum = " + hiNum + " " + typeof hiNum)
@@ -38,12 +37,16 @@ function showVariables() {
   console.log('\n')
 }
 
+function randomInteger(min, max) {
+  let range = max - min + 1;
+  return +(min + Math.floor(Math.random() * range));
+}
+
 function newGuess(max, min) {
   return Math.floor(((max - min + 1) / 2) + min)
 }
 
 function cheatChecker(cheatCode) {
-
   if (cheatCode === 1) {
     if (secretNumber < 1 || secretNumber > hiNum) {
       console.log("\nYou are trying to cheat.\nNext time pick a number in range.")
@@ -63,11 +66,6 @@ function cheatChecker(cheatCode) {
       process.exit()
     }
   }
-}
-
-function randomInteger(min, max) {
-  let range = max - min + 1;
-  return +(min + Math.floor(Math.random() * range));
 }
 
 start()
@@ -107,11 +105,10 @@ async function humanGuesses() {
   if (numOfGuesses <= 7) {
     console.log("You must have cheated to guess it in only " + numOfGuesses + " tries.")
   } else {
-    console.log("HA! It took you " + numOfGuesses + " tries.")
+    console.log("HA!\nYou guessed it but it took you " + numOfGuesses + " tries.")
   }
   process.exit()
 }
-
 
 // Run computer guesses game
 async function computerGuesses() {
@@ -121,7 +118,6 @@ async function computerGuesses() {
   hiNum = +(await ask("\nI will even allow you to set the range.\nLet's say bettween 1 and...?\nEnter a number greater than 1 \n>"))
   // Human picks secret number
   secretNumber = +(await ask("\nNow, pick your secret number.\n>(I will not look... really...)\n>"))
-  showVariables()
   cheatChecker(1)  // check Human input for cheating
   console.log('You entered: ' + secretNumber + "\n(Which I TOTALLY did not see.)\n")
 
@@ -142,9 +138,9 @@ async function computerGuesses() {
         cheatChecker(3)
         guessLowerThan = currentGuess
         hiNum = currentGuess
-      } else { 'Please enter Capital H or Capital L only...\n' }
+      } else { 'Please enter Capital H or Capital L only...OK?\nTry again.\n' }
     } else {
-      console.log('Please enter Capital Y or Capital N only...OK?\n')
+      console.log('Please enter Capital Y or Capital N only...OK?\nTry again.\n')
     }
   }
 
