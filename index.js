@@ -95,6 +95,7 @@ async function humanGuesses() {
      } else {
           console.log("HA!\nYou guessed it but it took you " + numOfGuesses + " tries.")
      }
+     
      process.exit()
 }
 
