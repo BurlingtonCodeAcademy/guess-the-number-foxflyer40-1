@@ -1,5 +1,3 @@
-// send output to the console
-const { Console } = require('console')
 // import Readline
 const readline = require('readline')
 const rl = readline.createInterface(process.stdin, process.stdout)
@@ -95,7 +93,7 @@ async function humanGuesses() {
      } else {
           console.log("HA!\nYou guessed it but it took you " + numOfGuesses + " tries.")
      }
-     
+
      process.exit()
 }
 
