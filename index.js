@@ -68,7 +68,7 @@ async function start() {
      }
 }
 
-// Run Human Guesses game
+// Run Human Guesses game ********************************************************
 async function humanGuesses() {
      console.log("\nNow I (Mighty computer) will pick a number between 1 and 100\nand You (Puny human) try to guess it.\n")
      hiNum = 100
@@ -97,7 +97,7 @@ async function humanGuesses() {
      process.exit()
 }
 
-// Run computer guesses game and run until human says number guessed is correct
+// Run computer guesses game and run until human says number guessed is correct ******************************
 async function computerGuesses() {
      numOfGuesses = 1
      console.log("\nNow You (Puny human) will pick a number and\nI (Mighty computer) will certainly guess it.\n")
